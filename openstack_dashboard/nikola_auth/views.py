@@ -28,13 +28,13 @@ from django.views.decorators.debug import sensitive_post_parameters  # noqa
 from keystoneclient import exceptions as keystone_exceptions
 from keystoneclient.v2_0 import client as keystone_client_v2
 
-from openstack_auth import forms
+from nikola_auth import forms
 # This is historic and is added back in to not break older versions of
 # Horizon, fix to Horizon to remove this requirement was committed in
 # Juno
-from openstack_auth.forms import Login  # noqa
-from openstack_auth import user as auth_user
-from openstack_auth import utils
+from nikola_auth.forms import Login  # noqa
+from nikola_auth import user as auth_user
+from nikola_auth import utils
 
 try:
     is_safe_url = http.is_safe_url
@@ -49,7 +49,7 @@ LOG = logging.getLogger(__name__)
 @csrf_protect
 @never_cache
 def login(request, template_name=None, extra_context=None, **kwargs):
-    """Logs a user in using the :class:`~openstack_auth.forms.Login` form."""
+    """Logs a user in using the :class:`~nikola_auth.forms.Login` form."""
     # If the user is already authenticated, redirect them to the
     # dashboard straight away, unless the 'next' parameter is set as it
     # usually indicates requesting access to a page that requires different

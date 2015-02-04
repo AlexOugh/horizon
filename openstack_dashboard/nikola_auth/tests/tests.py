@@ -24,9 +24,9 @@ from keystoneclient import exceptions as keystone_exceptions
 from keystoneclient.v2_0 import client as client_v2
 from keystoneclient.v3 import client as client_v3
 
-from openstack_auth.tests import data_v2
-from openstack_auth.tests import data_v3
-from openstack_auth import utils
+from nikola_auth.tests import data_v2
+from nikola_auth.tests import data_v3
+from nikola_auth import utils
 
 
 DEFAULT_DOMAIN = settings.OPENSTACK_KEYSTONE_DEFAULT_DOMAIN

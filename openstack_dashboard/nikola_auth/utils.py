@@ -74,7 +74,7 @@ def is_token_valid(token, margin=None):
 
     .. param:: token
 
-       The openstack_auth.user.Token instance to check
+       The nikola_auth.user.Token instance to check
 
     .. param:: margin
 

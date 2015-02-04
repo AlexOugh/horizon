@@ -18,7 +18,7 @@ import django.views.decorators.vary
 import horizon
 from horizon import base
 
-from openstack_auth import forms
+from nikola_auth import forms
 
 
 def get_user_home(user):

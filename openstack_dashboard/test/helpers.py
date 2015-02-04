@@ -41,8 +41,8 @@ import mock
 import mox
 from neutronclient.v2_0 import client as neutron_client
 from novaclient.v1_1 import client as nova_client
-from openstack_auth import user
-from openstack_auth import utils
+from nikola_auth import user
+from nikola_auth import utils
 from saharaclient import client as sahara_client
 from swiftclient import client as swift_client
 from troveclient import client as trove_client

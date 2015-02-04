@@ -19,7 +19,7 @@ from django.contrib.auth import models
 
 from keystoneclient import exceptions as keystone_exceptions
 
-from openstack_auth import utils
+from nikola_auth import utils
 
 
 LOG = logging.getLogger(__name__)

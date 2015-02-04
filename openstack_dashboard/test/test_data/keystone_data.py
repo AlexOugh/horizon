@@ -27,7 +27,7 @@ from keystoneclient.v3 import domains
 from keystoneclient.v3 import groups
 from keystoneclient.v3 import role_assignments
 
-from openstack_auth import user as auth_user
+from nikola_auth import user as auth_user
 
 from openstack_dashboard.test.test_data import utils
 

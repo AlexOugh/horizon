@@ -12,6 +12,6 @@
 # limitations under the License.
 
 
-class KeystoneAuthException(Exception):
+class AuthException(Exception):
     """Generic error class to identify and catch our own errors."""
     pass

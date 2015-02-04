@@ -32,7 +32,7 @@ import horizon
 urlpatterns = patterns(
     '',
     url(r'^$', 'openstack_dashboard.views.splash', name='splash'),
-    url(r'^auth/', include('openstack_auth.urls')),
+    url(r'^auth/', include('nikola_auth.urls')),
     url(r'^api/', include('openstack_dashboard.api.rest.urls')),
     url(r'', include(horizon.urls)),
 )

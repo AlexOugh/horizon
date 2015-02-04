@@ -159,11 +159,11 @@ INSTALLED_APPS = [
     'openstack_dashboard.django_pyscss_fix',
     'compressor',
     'horizon',
-    'openstack_auth',
+    #'openstack_auth',
 ]
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-AUTHENTICATION_BACKENDS = ('openstack_auth.backend.KeystoneBackend',)
+AUTHENTICATION_BACKENDS = ('openstack_dashboard.nikola_auth.backend.NikolaBackend',)
 MESSAGE_STORAGE = 'django.contrib.messages.storage.fallback.FallbackStorage'
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
@@ -293,5 +293,5 @@ if DEBUG:
 # patch below will not otherwise be applied in time - resulting in developers
 # appearing to be logged out.  In typical production deployments this section
 # below may be omitted, though it should not be harmful
-from openstack_auth import utils as auth_utils
+from nikola_auth import utils as auth_utils
 auth_utils.patch_middleware_get_user()

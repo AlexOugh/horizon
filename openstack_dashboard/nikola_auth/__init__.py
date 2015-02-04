@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pbr.version
+#import pbr.version
 
 
-__version__ = pbr.version.VersionInfo('django_openstack_auth').version_string()
+#__version__ = pbr.version.VersionInfo('django_openstack_auth').version_string()

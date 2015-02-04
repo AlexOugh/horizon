@@ -19,7 +19,7 @@ import logging
 import os.path
 
 from django.conf import settings
-from openstack_auth import utils as auth_utils
+from nikola_auth import utils as auth_utils
 from oslo_config import cfg
 
 from openstack_dashboard.openstack.common import policy

@@ -17,7 +17,7 @@ import os
 import sys
 
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'openstack_auth.tests.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'nikola_auth.tests.settings'
 
 from django.test import simple as test_simple
 

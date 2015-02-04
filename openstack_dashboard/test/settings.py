@@ -40,7 +40,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.humanize',
     'django_nose',
-    'openstack_auth',
+    #'openstack_auth',
     'compressor',
     'horizon',
     'openstack_dashboard',
@@ -51,7 +51,7 @@ INSTALLED_APPS = (
     'openstack_dashboard.dashboards.router',
 )
 
-AUTHENTICATION_BACKENDS = ('openstack_auth.backend.KeystoneBackend',)
+AUTHENTICATION_BACKENDS = ('openstack_dashboard.nikola_auth.backend.NikolaBackend',)
 
 SITE_BRANDING = 'OpenStack'
 
@@ -147,7 +147,7 @@ LOGGING['loggers'].update(
             'handlers': ['test'],
             'propagate': False,
         },
-        'openstack_auth': {
+        'nikola_auth': {
             'handlers': ['test'],
             'propagate': False,
         },

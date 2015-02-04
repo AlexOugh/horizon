@@ -17,7 +17,7 @@ from django.utils.http import urlencode
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ungettext_lazy
 
-from openstack_auth import utils as auth_utils
+from nikola_auth import utils as auth_utils
 
 from horizon import exceptions
 from horizon import forms

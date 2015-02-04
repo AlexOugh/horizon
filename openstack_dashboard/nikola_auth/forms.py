@@ -20,7 +20,7 @@ from django import forms
 from django.utils.translation import ugettext_lazy as _
 from django.views.decorators.debug import sensitive_variables  # noqa
 
-from openstack_auth import exceptions
+from nikola_auth import exceptions
 
 
 LOG = logging.getLogger(__name__)
@@ -94,7 +94,7 @@ class Login(django_auth_forms.AuthenticationForm):
             msg = 'Login successful for user "%(username)s".' % \
                 {'username': username}
             LOG.info(msg)
-        except exceptions.KeystoneAuthException as exc:
+        except exceptions.AuthException as exc:
             msg = 'Login failed for user "%(username)s".' % \
                 {'username': username}
             LOG.warning(msg)

@@ -26,8 +26,8 @@ import six.moves.urllib.parse as urlparse
 
 from keystoneclient import exceptions as keystone_exceptions
 
-from openstack_auth import backend
-from openstack_auth import utils as auth_utils
+from nikola_auth import backend
+from nikola_auth import utils as auth_utils
 
 from horizon import exceptions
 from horizon import messages

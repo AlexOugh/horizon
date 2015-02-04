@@ -33,8 +33,8 @@ from django.utils.encoding import iri_to_uri  # noqa
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
-from openstack_auth import utils as auth_utils
-from openstack_auth import views as auth_views
+from nikola_auth import utils as auth_utils
+from nikola_auth import views as auth_views
 import six
 
 from horizon import exceptions

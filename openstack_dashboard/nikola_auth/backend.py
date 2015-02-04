@@ -20,9 +20,9 @@ from django.utils.translation import ugettext_lazy as _
 
 from keystoneclient import exceptions as keystone_exceptions
 
-from openstack_auth import exceptions
-from openstack_auth import user as auth_user
-from openstack_auth import utils
+from nikola_auth import exceptions
+from nikola_auth import user as auth_user
+from nikola_auth import utils
 
 
 LOG = logging.getLogger(__name__)
@@ -31,7 +31,7 @@ LOG = logging.getLogger(__name__)
 KEYSTONE_CLIENT_ATTR = "_keystoneclient"
 
 
-class KeystoneBackend(object):
+class NikolaBackend(object):
     """Django authentication backend class for use with
       ``django.contrib.auth``.
     """
@@ -44,7 +44,7 @@ class KeystoneBackend(object):
                         "service appears to have expired before it was "
                         "issued. This may indicate a problem with either your "
                         "server or client configuration.")
-            raise exceptions.KeystoneAuthException(msg)
+            raise exceptions.AuthException(msg)
         return True
 
     def get_user(self, user_id):

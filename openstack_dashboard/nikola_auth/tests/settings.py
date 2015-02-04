@@ -18,8 +18,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.auth',
     'django.contrib.sessions',
-    'openstack_auth',
-    'openstack_auth.tests'
+    'nikola_auth',
+    'nikola_auth.tests'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -29,11 +29,11 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.AuthenticationMiddleware'
 ]
 
-AUTHENTICATION_BACKENDS = ['openstack_auth.backend.KeystoneBackend']
+AUTHENTICATION_BACKENDS = ['openstack_dashboard.nikola_auth.backend.NikolaBackend']
 
 OPENSTACK_KEYSTONE_URL = "http://localhost:5000/v3"
 
-ROOT_URLCONF = 'openstack_auth.tests.urls'
+ROOT_URLCONF = 'nikola_auth.tests.urls'
 
 LOGIN_REDIRECT_URL = '/'
 

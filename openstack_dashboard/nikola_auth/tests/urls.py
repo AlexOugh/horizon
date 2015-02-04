@@ -16,7 +16,7 @@ from django.conf.urls import patterns
 from django.conf.urls import url
 from django.views import generic
 
-from openstack_auth import utils
+from nikola_auth import utils
 
 
 utils.patch_middleware_get_user()
@@ -24,6 +24,6 @@ utils.patch_middleware_get_user()
 
 urlpatterns = patterns(
     '',
-    url(r"", include('openstack_auth.urls')),
+    url(r"", include('nikola_auth.urls')),
     url(r"^$", generic.TemplateView.as_view(template_name="auth/blank.html"))
 )

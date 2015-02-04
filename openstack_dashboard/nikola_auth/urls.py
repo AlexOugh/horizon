@@ -14,13 +14,13 @@
 from django.conf.urls import patterns
 from django.conf.urls import url
 
-from openstack_auth import utils
+from nikola_auth import utils
 
 utils.patch_middleware_get_user()
 
 
 urlpatterns = patterns(
-    'openstack_auth.views',
+    'nikola_auth.views',
     url(r"^login/$", "login", name='login'),
     url(r"^logout/$", 'logout', name='logout'),
     url(r'^switch/(?P<tenant_id>[^/]+)/$', 'switch', name='switch_tenants'),

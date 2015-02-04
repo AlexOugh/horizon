@@ -21,7 +21,7 @@ from django.conf import settings
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext_lazy as _
 
-from openstack_auth import utils as auth_utils
+from nikola_auth import utils as auth_utils
 
 from horizon import exceptions
 from horizon import forms
