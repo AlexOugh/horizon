@@ -101,13 +101,13 @@ class NikolaBackend(object):
                 keystone_exceptions.NotFound) as exc:
             msg = _('Invalid user name or password.')
             LOG.debug(str(exc))
-            raise exceptions.KeystoneAuthException(msg)
+            raise exceptions.AuthException(msg)
         except (keystone_exceptions.ClientException,
                 keystone_exceptions.AuthorizationFailure) as exc:
             msg = _("An error occurred authenticating. "
                     "Please try again later.")
             LOG.debug(str(exc))
-            raise exceptions.KeystoneAuthException(msg)
+            raise exceptions.AuthException(msg)
 
         # Check expiry for our unscoped auth ref.
         self.check_auth_expiry(unscoped_auth_ref)
@@ -127,12 +127,12 @@ class NikolaBackend(object):
             except (keystone_exceptions.ClientException,
                     keystone_exceptions.AuthorizationFailure) as exc:
                 msg = _('Unable to retrieve authorized projects.')
-                raise exceptions.KeystoneAuthException(msg)
+                raise exceptions.AuthException(msg)
 
             # Abort if there are no projects for this user
             if not projects:
                 msg = _('You are not authorized for any projects.')
-                raise exceptions.KeystoneAuthException(msg)
+                raise exceptions.AuthException(msg)
 
             while projects:
                 project = projects.pop()
@@ -152,7 +152,7 @@ class NikolaBackend(object):
 
             if auth_ref is None:
                 msg = _("Unable to authenticate to any available projects.")
-                raise exceptions.KeystoneAuthException(msg)
+                raise exceptions.AuthException(msg)
 
         # Check expiry for our new scoped token.
         self.check_auth_expiry(auth_ref)
