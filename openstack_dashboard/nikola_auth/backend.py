@@ -70,12 +70,12 @@ class NikolaBackend(object):
         """Authenticates a user via the Keystone Identity API."""
         LOG.debug('Beginning user authentication for user "%s".' % username)
 
-        insecure = getattr(settings, 'OPENSTACK_SSL_NO_VERIFY', False)
-        ca_cert = getattr(settings, "OPENSTACK_SSL_CACERT", None)
+        #insecure = getattr(settings, 'OPENSTACK_SSL_NO_VERIFY', False)
+        #ca_cert = getattr(settings, "OPENSTACK_SSL_CACERT", None)
         endpoint_type = getattr(
             settings, 'OPENSTACK_ENDPOINT_TYPE', 'publicURL')
 
-        # keystone client v3 does not support logging in on the v2 url any more
+        """# keystone client v3 does not support logging in on the v2 url any more
         if utils.get_keystone_version() >= 3:
             if utils.has_in_url_path(auth_url, "/v2.0"):
                 LOG.warning("The settings.py file points to a v2.0 keystone "
@@ -152,23 +152,36 @@ class NikolaBackend(object):
 
             if auth_ref is None:
                 msg = _("Unable to authenticate to any available projects.")
-                raise exceptions.AuthException(msg)
+                raise exceptions.AuthException(msg)"""
+
+        try:
+            from openstack_dashboard.api.nikola.keystone_interface_v3 import authenticate as nikola_authenticate
+            (unscoped_auth_ref, auth_ref, service_catalog) = nikola_authenticate(auth_url, username, password, user_domain_name)
+            #auth_ref['auth_url'] = auth_url
+            print "### auth_ref : %s" % auth_ref
+        except Exception, exc:
+            #print exc
+            LOG.debug(str(exc))
+            raise exc
 
         # Check expiry for our new scoped token.
         self.check_auth_expiry(auth_ref)
+
+        unscoped_token = auth_user.Token(auth_ref=unscoped_auth_ref)
 
         # If we made it here we succeeded. Create our User!
         user = auth_user.create_user_from_token(
             request,
             auth_user.Token(auth_ref),
-            client.service_catalog.url_for(endpoint_type=endpoint_type))
+            service_catalog.url_for(endpoint_type=endpoint_type))
 
         if request is not None:
             request.session['unscoped_token'] = unscoped_token.id
             request.user = user
+            request.session['auth_ref'] = auth_ref
 
             # Support client caching to save on auth calls.
-            setattr(request, KEYSTONE_CLIENT_ATTR, client)
+            #setattr(request, KEYSTONE_CLIENT_ATTR, client)
 
         LOG.debug('Authentication completed for user "%s".' % username)
         return user
