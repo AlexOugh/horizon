@@ -13,43 +13,14 @@
 import logging
 
 from django.conf import settings
-from heatclient import client as heat_client
+#from heatclient import client as heat_client
 
 from horizon.utils import functions as utils
-from horizon.utils.memoized import memoized  # noqa
-from openstack_dashboard.api import base
+#from horizon.utils.memoized import memoized  # noqa
+#from openstack_dashboard.api import base
+from openstack_dashboard.api.nikola.heat import *
 
 LOG = logging.getLogger(__name__)
-
-
-def format_parameters(params):
-    parameters = {}
-    for count, p in enumerate(params, 1):
-        parameters['Parameters.member.%d.ParameterKey' % count] = p
-        parameters['Parameters.member.%d.ParameterValue' % count] = params[p]
-    return parameters
-
-
-@memoized
-def heatclient(request, password=None):
-    api_version = "1"
-    insecure = getattr(settings, 'OPENSTACK_SSL_NO_VERIFY', False)
-    cacert = getattr(settings, 'OPENSTACK_SSL_CACERT', None)
-    endpoint = base.url_for(request, 'orchestration')
-    kwargs = {
-        'token': request.user.token.id,
-        'insecure': insecure,
-        'ca_file': cacert,
-        'username': request.user.username,
-        'password': password
-        # 'timeout': args.timeout,
-        # 'ca_file': args.ca_file,
-        # 'cert_file': args.cert_file,
-        # 'key_file': args.key_file,
-    }
-    client = heat_client.Client(api_version, endpoint, **kwargs)
-    client.format_parameters = format_parameters
-    return client
 
 
 def stacks_list(request, marker=None, sort_dir='desc', sort_key='created_at',
@@ -66,12 +37,10 @@ def stacks_list(request, marker=None, sort_dir='desc', sort_key='created_at',
     if marker:
         kwargs['marker'] = marker
 
-    stacks_iter = heatclient(request).stacks.list(limit=request_size,
-                                                  **kwargs)
+    stacks = nikola_stacks_list(request.session['auth_ref'], marker, sort_dir, sort_key, request_size)
 
     has_prev_data = False
     has_more_data = False
-    stacks = list(stacks_iter)
 
     if paginate:
         if len(stacks) > page_size:
@@ -87,60 +56,52 @@ def stacks_list(request, marker=None, sort_dir='desc', sort_key='created_at',
 
 
 def stack_delete(request, stack_id):
-    return heatclient(request).stacks.delete(stack_id)
+    return nikola_stack_delete(request.session['auth_ref'], stack_id)
 
 
 def stack_get(request, stack_id):
-    return heatclient(request).stacks.get(stack_id)
+    return nikola_stack_get(request.session['auth_ref'], stack_id)
 
 
 def template_get(request, stack_id):
-    return heatclient(request).stacks.template(stack_id)
+    return nikola_template_get(request.session['auth_ref'], stack_id)
 
 
 def stack_create(request, password=None, **kwargs):
-    return heatclient(request, password).stacks.create(**kwargs)
+    return nikola_stack_create(request.session['auth_ref'], **kwargs)
 
 
 def stack_update(request, stack_id, password=None, **kwargs):
-    return heatclient(request, password).stacks.update(stack_id, **kwargs)
+    return nikola_stack_update(request.session['auth_ref'], stack_id, **kwargs)
 
 
 def events_list(request, stack_name):
-    return heatclient(request).events.list(stack_name)
+    return nikola_events_list(request.session['auth_ref'], stack_name)
 
 
 def resources_list(request, stack_name):
-    return heatclient(request).resources.list(stack_name)
+    return nikola_resources_list(request.session['auth_ref'], stack_name)
 
 
 def resource_get(request, stack_id, resource_name):
-    return heatclient(request).resources.get(stack_id, resource_name)
+    return nikola_resource_get(request.session['auth_ref'], stack_id, resource_name)
 
 
 def resource_metadata_get(request, stack_id, resource_name):
-    return heatclient(request).resources.metadata(stack_id, resource_name)
+    return nikola_resource_metadata_get(request.session['auth_ref'], stack_id, resource_name)
 
 
 def template_validate(request, **kwargs):
-    return heatclient(request).stacks.validate(**kwargs)
+    return nikola_template_validate(request.session['auth_ref'], **kwargs)
 
 
 def action_check(request, stack_id):
-    return heatclient(request).actions.check(stack_id)
-
-
-def action_suspend(request, stack_id):
-    return heatclient(request).actions.suspend(stack_id)
-
-
-def action_resume(request, stack_id):
-    return heatclient(request).actions.resume(stack_id)
+    return nikola_action_check(request.session['auth_ref'], stack_id)
 
 
 def resource_types_list(request):
-    return heatclient(request).resource_types.list()
+    return nikola_resource_types_list(request.session['auth_ref'])
 
 
 def resource_type_get(request, resource_type):
-    return heatclient(request).resource_types.get(resource_type)
+    return nikola_resource_type_get(request.session['auth_ref'], resource_type)
