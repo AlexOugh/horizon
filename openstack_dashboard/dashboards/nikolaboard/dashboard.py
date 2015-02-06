@@ -4,11 +4,11 @@ import horizon
 
 class Nikolagroup(horizon.PanelGroup):
     slug = "nikolagroup"
-    name = _("Nikola Group")
+    name = _("PoC Features")
     panels = ('workflowpanel', 'catalogpanel', 'usagepanel', )
 
 class Nikolaboard(horizon.Dashboard):
-    name = _("Nikola Board")
+    name = _("Nikola")
     slug = "nikolaboard"
     panels = (Nikolagroup,)  # Add your panels here.
     default_panel = 'workflowpanel'  # Specify the slug of the dashboard's default panel.
