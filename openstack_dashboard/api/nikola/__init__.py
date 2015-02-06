@@ -32,10 +32,14 @@ shouldn't need to understand the finer details of APIs for
 Keystone/Nova/Glance/Swift et. al.
 """
 from openstack_dashboard.api.nikola import keystone_interface_v3
+from openstack_dashboard.api.nikola import heat
+from openstack_dashboard.api.nikola import catalog
+from openstack_dashboard.api.nikola import usage
 
 
 __all__ = [
     "keystone_interface_v3",
-    "catalog",
     "heat",
+    "catalog",
+    "usage",
 ]
