@@ -5,9 +5,10 @@ from horizon import tables
 
 class WorkflowTable(tables.DataTable):
     name = tables.Column("name", verbose_name=_("Name"))
-    status = tables.Column("status", verbose_name=_("Status"))
-    zone = tables.Column('availability_zone', verbose_name=_("Availability Zone"))
-    image_name = tables.Column('image_name', verbose_name=_("Image Name"))
+    scope = tables.Column("scope", verbose_name=_("Scope"))
+    created_at = tables.Column('created_at', verbose_name=_("Created At"))
+    updated_at = tables.Column('updated_at', verbose_name=_("Updated At"))
+    #definition = tables.Column("definition", verbose_name=_("Definition"))
 
     class Meta:
         name = "workflow"

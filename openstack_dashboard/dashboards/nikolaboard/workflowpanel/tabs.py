@@ -22,11 +22,11 @@ class WorkflowTab(tabs.TableTab):
             marker = self.request.GET.get(
                         tables.WorkflowTable._meta.pagination_param, None)
 
-            instances, self._has_more = api.nova.server_list(
+            workbooks, self._has_more, has_prev_data = api.nikola.workflow.list_workbooks(
                 self.request,
                 search_opts={'marker': marker, 'paginate': True})
 
-            return instances
+            return workbooks
         except Exception:
             self._has_more = False
             error_message = _('Unable to get instances')

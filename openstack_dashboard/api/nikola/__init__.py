@@ -35,6 +35,7 @@ from openstack_dashboard.api.nikola import keystone_interface_v3
 from openstack_dashboard.api.nikola import heat
 from openstack_dashboard.api.nikola import catalog
 from openstack_dashboard.api.nikola import usage
+from openstack_dashboard.api.nikola import workflow
 
 
 __all__ = [
@@ -42,4 +43,5 @@ __all__ = [
     "heat",
     "catalog",
     "usage",
+    "workflow",
 ]
