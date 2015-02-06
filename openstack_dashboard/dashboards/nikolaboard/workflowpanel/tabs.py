@@ -33,7 +33,24 @@ class WorkflowTab(tabs.TableTab):
             exceptions.handle(self.request, error_message)
             return []
 
+
+class WorkflowTemplateTab(tabs.Tab):
+    name = _("Template")
+    slug = "workflow_template"
+    template_name = "nikolaboard/workflowpanel/_workflow_template.html"
+
+    def allowed(self, request):
+        #return policy.check(
+        #    (("orchestration", "cloudformation:DescribeStacks"),),
+        #    request)
+        return True
+
+    def get_context_data(self, request):
+        return {"workflow_template": self.tab_group.kwargs['workflow_template']}
+
+
 class WorkflowTabs(tabs.TabGroup):
     slug = "workflowpanel_tabs"
-    tabs = (WorkflowTab,)
+    tabs = (WorkflowTab, WorkflowTemplateTab, )
     sticky = True
+
