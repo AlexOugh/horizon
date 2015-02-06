@@ -25,24 +25,24 @@ from heat import *
 
 class ServiceCatalog():
     
-    def __init__(self, id, name, description, availability):
-        self.id = id
-        self.name = name
-        self.description = description
-        self.availability = availability
+    def __init__(self, catalog_json):
+        self.id = catalog_json['id']
+        self.name = catalog_json['name']
+        self.description = catalog_json['description']
+        self.availability = catalog_json['availability']
+        self.content = catalog_json['content']
 
 
 def list_catalogs(request, search_opts=None):
 
-    res = [{'id':'1', 'name':'catalog 1', 'description':'first catalog', 'availability':True, 'content':''},
-                {'id':'2', 'name':'catalog 2', 'description':'second catalog', 'availability':True, 'content':''},
-                {'id':'3', 'name':'catalog 2', 'description':'third catalog', 'availability':False, 'content':''}]
-
+    from nikola_api import NikolaAPI
+    nikapi = NikolaAPI()
+    res = nikapi.send(url='/useast1/nikola/r2/openstack/list_catalogs', data='{"all":null}')
+    print 'result = %s' % res['result']
     catalogs = []
-    for catalog in res:
-        catalogs.append(ServiceCatalog(catalog['id'], catalog['name'], catalog['description'], catalog['availability']))
+    for catalog in res['result']['result']:
+        catalogs.append(ServiceCatalog(catalog))
 
     has_prev_data = False
     has_more_data = False
     return (catalogs, has_more_data, has_prev_data)
-
