@@ -25,12 +25,35 @@ class Workbook():
         self.definition = workbook_json['definition']
 
 
+class Workflow():
+    
+    def __init__(self, workflow_json):
+        '''{
+            "definition": null,
+            "scope": "private",
+            "name": "nikola_poc_sample.customer_setup",
+            "tags": null,
+            "input": "requester_sso_token, root_op_user_name, root_op_password, root_op_domain_name, email, first_name, last_name, password, company_uuid, auth_url, domain_name, domain_description, project_name, project_description, enabled",
+            "created_at": "2015-02-06 06:16:44",
+            "updated_at": "2015-02-06 09:57:02",
+            "id": "29bbe30c-8935-43fc-8e5c-a9861e1f08d5"
+        }'''
+        self.id = workflow_json['id']
+        self.name = workflow_json['name']
+        self.input = workflow_json['input']
+        self.tags = workflow_json['tags']
+        self.created_at = workflow_json['created_at']
+        self.updated_at = workflow_json['updated_at']
+        self.scope = workflow_json['scope']
+        self.definition = workflow_json['definition']
+        self.parameters = self.input.split(',')
+
+
 def list_workbooks(request, search_opts=None):
     
     from nikola_api import NikolaAPI
     nikapi = NikolaAPI()
     res = nikapi.send(url='/useast1/nikola/r2/workflow/list_workbooks', data='{"all":null}')
-    print 'result = %s' % res['result']
     workbooks = []
     for workbook in res['result']['result']['workbooks']:
         workbooks.append(Workbook(workbook))
@@ -45,11 +68,28 @@ def list_workflows(request, search_opts=None):
     from nikola_api import NikolaAPI
     nikapi = NikolaAPI()
     res = nikapi.send(url='/useast1/nikola/r2/workflow/list_workflows', data='{"all":null}')
-    print 'result = %s' % res['result']
-    workbooks = []
-    for workbook in res['result']['result']['workbooks']:
-        workbooks.append(Workbook(workbook))
+    workflows = []
+    for workflow in res['result']['result']['workflows']:
+        workflows.append(Workflow(workflow))
 
     has_prev_data = False
     has_more_data = False
-    return (workbooks, has_more_data, has_prev_data)
+    return (workflows, has_more_data, has_prev_data)
+
+
+def get_workbook(request, workbook_id):
+
+    (workbooks, has_more_data, has_prev_data) = list_workbooks(request)
+    for workbook in workbooks:
+        if workbook.id == workbook_id:  return workbook
+    return None
+
+
+def get_workflow(request, workbook):
+    
+    (workflows, has_more_data, has_prev_data) = list_workflows(request)
+    for workflow in workflows:
+        if workbook.name == workflow.name.split('.')[0]:    return workflow
+    return None
+
+
