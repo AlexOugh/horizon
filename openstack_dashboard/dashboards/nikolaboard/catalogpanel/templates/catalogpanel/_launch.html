@@ -1,0 +1,34 @@
+{% extends "horizon/common/_modal_form.html" %}
+{% load i18n %}
+{% load url from future %}
+
+{% block form_id %}launch_catalog{% endblock %}
+{% block form_action %}{% url 'horizon:nikolaboard:catalogpanel:launch' catalog_id %}{% endblock %}
+
+{% block modal-header %}{{ catalog_name }}{% endblock %}
+{% block modal_id %}launch_catalog_modal{% endblock %}
+
+{% block modal-body %}
+<div class="left">
+    <fieldset>
+    {% include "horizon/common/_form_fields.html" %}
+	<!--{% for value in catalog_parameters %}
+	<div class="form-group ">
+      <label class="control-label" for="id_{{ value }}">{{ value }}</label>
+	    <div class=" ">
+	        <input class="form-control" id="id_{{ value }}" name="{{ value }}" type="text" value="" />
+	    </div>
+	</div>
+    {% endfor %}-->
+    </fieldset>
+</div>
+<div class="right">
+    <h3>{% trans "Description:" %}</h3>
+    <p>{% trans "Provision a new service catalog with the provided values." %}</p>
+</div>
+{% endblock %}
+
+{% block modal-footer %}
+  <input class="btn btn-primary pull-right" type="submit" value="{% trans "Launch" %}" />
+  <a href="{% url 'horizon:nikolaboard:catalogpanel:index' %}" class="btn btn-default secondary cancel close">{% trans "Cancel" %}</a>
+{% endblock %}

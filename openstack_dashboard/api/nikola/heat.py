@@ -32,7 +32,6 @@ def format_parameters(params):
 
 #@memoized
 def heatclient(auth_ref):
-    print "###", auth_ref
     catalog = auth_ref.get('catalog')
     endpoint = next(ep['url'] for ep in next(s['endpoints'] for s in catalog if s['name'] == 'heat') if ep['interface']=='public')
     api_version = "1"

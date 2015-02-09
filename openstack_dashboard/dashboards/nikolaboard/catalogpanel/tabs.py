@@ -14,9 +14,6 @@ class CatalogTab(tabs.Tab):
     preload = False
 
     def allowed(self, request):
-        #return policy.check(
-        #    (("orchestration", "cloudformation:DescribeStacks"),),
-        #    request)
         return True
 
     def get_context_data(self, request):
@@ -29,9 +26,6 @@ class CatalogTemplateTab(tabs.Tab):
     template_name = "nikolaboard/catalogpanel/_catalog_template.html"
 
     def allowed(self, request):
-        #return policy.check(
-        #    (("orchestration", "cloudformation:DescribeStacks"),),
-        #    request)
         return True
 
     def get_context_data(self, request):

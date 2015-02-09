@@ -8,4 +8,5 @@ urlpatterns = patterns(
     '',
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^catalog/(?P<catalog_id>[^/]+)/$', views.DetailView.as_view(), name='detail'),
+    url(r'^catalog/(?P<catalog_id>[^/]+)/launch/$',  views.LaunchCatalogView.as_view(), name='launch'),
 )

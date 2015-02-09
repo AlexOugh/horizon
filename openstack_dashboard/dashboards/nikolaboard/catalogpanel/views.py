@@ -2,12 +2,15 @@
 from horizon import tables
 from horizon import tabs
 from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
+from horizon import forms
 
 from openstack_dashboard import api
 from openstack_dashboard.dashboards.nikolaboard.catalogpanel import tables as nikolaboard_tables
 from openstack_dashboard.dashboards.nikolaboard.catalogpanel import tabs as nikolaboard_tabs
+from openstack_dashboard.dashboards.nikolaboard.catalogpanel import forms as nikolaboard_forms
 
 
 class IndexView(tables.DataTableView):
@@ -55,7 +58,6 @@ class DetailView(tabs.TabbedTableView):
 
     def get_data(self, request, *args, **kwargs):
         catalog_id = kwargs['catalog_id']
-        print kwargs['catalog_id']
         try:
             catalog = api.nikola.catalog.get_catalog(
                 request,
@@ -85,12 +87,58 @@ class DetailView(tabs.TabbedTableView):
 
     def get_tabs(self, request, **kwargs):
         catalog = self.get_data(request, **kwargs)
-        #workflow_template = self.get_template(request, **kwargs)
         catalog_template = catalog.content
+        catalog_parameters = catalog.parameters
         return self.tab_group_class(
-            request, catalog=catalog, catalog_template=catalog_template, **kwargs)
+            request, catalog=catalog, catalog_template=catalog_template, catalog_parameters=catalog_parameters, **kwargs)
 
 
     @staticmethod
     def get_redirect_url():
         return reverse('horizon:nikolaboard:catalogpanel:index')
+
+
+class LaunchCatalogView(forms.ModalFormView):
+    template_name = 'nikolaboard/catalogpanel/launch.html'
+    modal_header = _("Launch Service Catalog")
+    form_id = "launch_catalog_form"
+    form_class = nikolaboard_forms.LaunchCatalogForm
+    submit_label = _("Launch Service Catalog")
+    submit_url = reverse_lazy("horizon:nikolaboard:catalogpanel:launch")
+    success_url = reverse_lazy('horizon:nikolaboard:catalogpanel:detail')
+
+    def dispatch(self, *args, **kwargs):
+        return super(LaunchCatalogView, self).dispatch(*args, **kwargs)
+
+
+    def get_form_kwargs(self):
+        kwargs = super(LaunchCatalogView, self).get_form_kwargs()
+        return kwargs
+
+
+    def get_initial(self):
+        service_catalog = self.get_object()
+        return {'catalog_id': service_catalog.id, 'catalog_name':service_catalog.name, 'catalog_parameters':service_catalog.parameters}
+
+
+    def get_context_data(self, **kwargs):
+        context = super(LaunchCatalogView, self).get_context_data(**kwargs)
+        service_catalog = self.get_object()
+        context['catalog_id'] = service_catalog.id
+        context['catalog_parameters'] = service_catalog.parameters
+        return context
+
+
+    def get_object(self):
+        catalog_id = self.kwargs['catalog_id']
+        try:
+            service_catalog = api.nikola.catalog.get_catalog(
+                self.request,
+                catalog_id)
+        except Exception:
+            msg = _("Unable to retrieve service catalog.")
+            redirect = reverse('horizon:nikolaboard:catalogpanel:index')
+            exceptions.handle(self.request, msg, redirect=redirect)
+        return service_catalog
+
+

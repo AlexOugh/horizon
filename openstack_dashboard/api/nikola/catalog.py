@@ -19,6 +19,7 @@
 #from horizon.utils.memoized import memoized  # noqa
 #from openstack_dashboard.api import base
 
+import json
 from heat import *
 
 #LOG = logging.getLogger(__name__)
@@ -55,7 +56,21 @@ def get_catalog(request, catalog_id):
     from nikola_api import NikolaAPI
     nikapi = NikolaAPI()
     res = nikapi.send(url='/useast1/nikola/r2/openstack/get_catalog', data='{"id":"%s"}' % (catalog_id))
-    print '***result = %s' % res
     return ServiceCatalog(res['result']['result'])
 
 
+def launch_catalog(request, catalog_id, params):
+    
+    auth_ref = request.session['auth_ref']
+    catalog = auth_ref.get('catalog')
+    endpoint = next(ep['url'] for ep in next(s['endpoints'] for s in catalog if s['name'] == 'heat') if ep['interface']=='public')
+    token = auth_ref['auth_token']  
+    
+    from nikola_api import NikolaAPI
+    nikapi = NikolaAPI()
+    data = json.dumps({"id":catalog_id, "params":params, "heat_url":endpoint, "token":token})
+    print data
+    res = nikapi.send(url='/useast1/nikola/r2/openstack/launch_catalog', data=data)
+    print res
+    return res['result']['result']
+    
