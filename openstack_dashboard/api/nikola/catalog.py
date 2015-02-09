@@ -31,6 +31,9 @@ class ServiceCatalog():
         self.description = catalog_json['description']
         self.availability = catalog_json['availability']
         self.content = catalog_json['content']
+        self.parameters = []
+        for key in catalog_json['input_params'].keys():
+            self.parameters.append(key)
 
 
 def list_catalogs(request, search_opts=None):
@@ -38,7 +41,6 @@ def list_catalogs(request, search_opts=None):
     from nikola_api import NikolaAPI
     nikapi = NikolaAPI()
     res = nikapi.send(url='/useast1/nikola/r2/openstack/list_catalogs', data='{"all":null}')
-    print 'result = %s' % res['result']
     catalogs = []
     for catalog in res['result']['result']:
         catalogs.append(ServiceCatalog(catalog))
@@ -46,3 +48,14 @@ def list_catalogs(request, search_opts=None):
     has_prev_data = False
     has_more_data = False
     return (catalogs, has_more_data, has_prev_data)
+
+
+def get_catalog(request, catalog_id):
+
+    from nikola_api import NikolaAPI
+    nikapi = NikolaAPI()
+    res = nikapi.send(url='/useast1/nikola/r2/openstack/get_catalog', data='{"id":"%s"}' % (catalog_id))
+    print '***result = %s' % res
+    return ServiceCatalog(res['result']['result'])
+
+

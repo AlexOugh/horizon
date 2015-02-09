@@ -7,35 +7,38 @@ from openstack_dashboard import api
 from openstack_dashboard.dashboards.nikolaboard.catalogpanel import tables
 
 
-class ServiceCatalogTab(tabs.TableTab):
-    name = _("List")
+class CatalogTab(tabs.Tab):
+    name = _("Overview")
     slug = "service_catalog_tab"
-    table_classes = (tables.ServiceCatalogTable,)
-    template_name = ("horizon/common/_detail_table.html")
+    template_name = "nikolaboard/catalogpanel/_catalog_detail.html"
     preload = False
 
-    def has_more_data(self, table):
-        return self._has_more
+    def allowed(self, request):
+        #return policy.check(
+        #    (("orchestration", "cloudformation:DescribeStacks"),),
+        #    request)
+        return True
 
-    def get_service_catalog_data(self):
-        try:
-            marker = self.request.GET.get(
-                        tables.ServiceCatalogTable._meta.pagination_param, None)
+    def get_context_data(self, request):
+        return {"catalog": self.tab_group.kwargs['catalog']}
 
-            #instances, self._has_more = api.nova.server_list(
-            catalogs, self._has_more, has_prev_data = api.nikola.catalog.list_catalogs(
-                self.request,
-                search_opts={'marker': marker, 'paginate': True})
-            #return instances
-            return catalogs
-        except Exception:
-            self._has_more = False
-            error_message = _('Unable to get catalogs')
-            exceptions.handle(self.request, error_message)
 
-            return []
+class CatalogTemplateTab(tabs.Tab):
+    name = _("Template")
+    slug = "catalog_template"
+    template_name = "nikolaboard/catalogpanel/_catalog_template.html"
 
-class CatalogpanelTabs(tabs.TabGroup):
+    def allowed(self, request):
+        #return policy.check(
+        #    (("orchestration", "cloudformation:DescribeStacks"),),
+        #    request)
+        return True
+
+    def get_context_data(self, request):
+        return {"catalog_template": self.tab_group.kwargs['catalog_template']}
+
+
+class CatalogTabs(tabs.TabGroup):
     slug = "catalogpanel_tabs"
-    tabs = (ServiceCatalogTab,)
+    tabs = (CatalogTab, CatalogTemplateTab)
     sticky = True
