@@ -36,6 +36,7 @@ from openstack_dashboard.api.nikola import heat
 from openstack_dashboard.api.nikola import catalog
 from openstack_dashboard.api.nikola import usage
 from openstack_dashboard.api.nikola import workflow
+from openstack_dashboard.api.nikola import sregistry
 
 
 __all__ = [
@@ -44,4 +45,5 @@ __all__ = [
     "catalog",
     "usage",
     "workflow",
+    "sregistry",
 ]

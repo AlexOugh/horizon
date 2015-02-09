@@ -5,7 +5,7 @@ import horizon
 class Nikolagroup(horizon.PanelGroup):
     slug = "nikolagroup"
     name = _("PoC Features")
-    panels = ('workflowpanel', 'catalogpanel', 'usagepanel', )
+    panels = ('sregistries', 'workflowpanel', 'catalogpanel', 'usagepanel', )
 
 class Nikolaboard(horizon.Dashboard):
     name = _("Nikola")
