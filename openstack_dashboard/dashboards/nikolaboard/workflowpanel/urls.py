@@ -7,4 +7,5 @@ urlpatterns = patterns(
     '',
     url(r'^$', views.IndexView.as_view(), name='index'),
     url(r'^workflow/(?P<workflow_id>[^/]+)/$', views.DetailView.as_view(), name='detail'),
+    url(r'^workflow/(?P<workflow_id>[^/]+)/launch/$',  views.LaunchWorkflowView.as_view(), name='launch'),
 )

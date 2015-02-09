@@ -2,12 +2,15 @@
 from horizon import tables
 from horizon import tabs
 from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 from horizon import exceptions
+from horizon import forms
 
 from openstack_dashboard import api
 from openstack_dashboard.dashboards.nikolaboard.workflowpanel import tables as nikolaboard_tables
 from openstack_dashboard.dashboards.nikolaboard.workflowpanel import tabs as nikolaboard_tabs
+from openstack_dashboard.dashboards.nikolaboard.workflowpanel import forms as nikolaboard_forms
 
 
 class IndexView(tables.DataTableView):
@@ -108,3 +111,52 @@ class DetailView(tabs.TabbedTableView):
     @staticmethod
     def get_redirect_url():
         return reverse('horizon:nikolaboard:workflowpanel:index')
+
+
+class LaunchWorkflowView(forms.ModalFormView):
+    template_name = 'nikolaboard/workflowpanel/launch.html'
+    modal_header = _("Launch Workflow")
+    form_id = "launch_workflow_form"
+    form_class = nikolaboard_forms.LaunchWorkflowForm
+    submit_label = _("Launch Workflow")
+    submit_url = reverse_lazy("horizon:nikolaboard:workflowpanel:launch")
+    success_url = reverse_lazy('horizon:nikolaboard:workflowpanel:detail')
+
+    def dispatch(self, *args, **kwargs):
+        return super(LaunchWorkflowView, self).dispatch(*args, **kwargs)
+
+
+    def get_form_kwargs(self):
+        kwargs = super(LaunchWorkflowView, self).get_form_kwargs()
+        return kwargs
+
+
+    def get_initial(self):
+        workflow = self.get_object()
+        return {'workflow_id': workflow.id, 'workflow_name':workflow.name, 'workflow_parameters':workflow.parameters}
+
+
+    def get_context_data(self, **kwargs):
+        context = super(LaunchWorkflowView, self).get_context_data(**kwargs)
+        workflow = self.get_object()
+        context['workflow_id'] = workflow.id
+        context['workflow_parameters'] = workflow.parameters
+        return context
+
+
+    def get_object(self):
+        workflow_id = self.kwargs['workflow_id']
+        try:
+            workbook = api.nikola.workflow.get_workbook(
+                self.request,
+                workflow_id)
+            workflow = api.nikola.workflow.get_workflow(
+                self.request,
+                workbook)
+        except Exception:
+            msg = _("Unable to retrieve workflow.")
+            redirect = reverse('horizon:nikolaboard:workflowpanel:index')
+            exceptions.handle(self.request, msg, redirect=redirect)
+        return workflow
+
+

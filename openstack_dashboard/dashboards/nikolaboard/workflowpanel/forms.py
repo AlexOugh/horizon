@@ -29,12 +29,12 @@ from openstack_dashboard import api
 LOG = logging.getLogger(__name__)
 
 
-class LaunchCatalogForm(forms.SelfHandlingForm):
+class LaunchWorkflowForm(forms.SelfHandlingForm):
 
-    catalog_id = forms.CharField(label=_("Catalog ID"),
+    workflow_id = forms.CharField(label=_("Workflow ID"),
                                 required=False,
                                 widget=forms.HiddenInput())
-    name = forms.CharField(max_length=255, label=_("Stack Name"), initial='poc_stackname_')
+    #name = forms.CharField(max_length=255, label=_("Stack Name"), initial='poc_stackname_')
     no_autocomplete = True
 
 
@@ -47,22 +47,30 @@ class LaunchCatalogForm(forms.SelfHandlingForm):
 
 
     def __init__(self, request, *args, **kwargs):
-        super(LaunchCatalogForm, self).__init__(request, *args, **kwargs)
+        super(LaunchWorkflowForm, self).__init__(request, *args, **kwargs)
 
-        catalog_id = kwargs['initial'].get('catalog_id', None)
+        workflow_id = kwargs['initial'].get('workflow_id', None)
 
         # add the fields from the input parameters of the selected catalog dynamically
-        for param in kwargs['initial'].get('catalog_parameters', []):
-            self.fields[param] = forms.CharField(label=_(param), required=True)
-            self.fields[param].initial = 'poc_%s_' % param.lower()
+        for param in kwargs['initial'].get('workflow_parameters', []):
+            self.fields[param.strip()] = forms.CharField(label=_(param.strip()), required=True)
 
         # set the default values
-        self._set_default('ExternalNetworkId', 'd28232f2-344f-43ed-89c0-6379c979f30d')
-        self._set_default('KeyName', 'managedos_key')
-        self._set_default('ImageName', 'centos')
-        self._set_default('FlavorName', 'm1.small')
-        self._set_default('IPRange', '10.10.  .0/24', False)
-        self._set_default('GatewayIP', '10.10.  .254', False)
+        self._set_default('requester_sso_token', "3018138b45d23850ebe49c0c97faa5a60f06a0e8407b7557bc72fca9764ff523")
+        self._set_default("root_op_user_name", "admin")
+        self._set_default("root_op_password", "password")
+        self._set_default("root_op_domain_name", "default")
+        self._set_default("company_uuid", "76c6f530-40c1-446d-a5d5-a66e78605149")
+        self._set_default("auth_url", "http://172.20.1.50:5000/v3/")
+        self._set_default("enabled", "True")
+        self._set_default("password", "Sungard05")
+        self._set_default("domain_description", "Domain created for poc")
+        self._set_default("project_description", "Project created for poc")
+        self._set_default("email", "poc_user_  @a.com", False)
+        self._set_default("first_name", "poc_first_", False)
+        self._set_default("last_name", "poc_last_", False)
+        self._set_default("domain_name", "poc_domain_", False)
+        self._set_default("project_name", "poc_project_", False)
 
 
     #@sensitive_variables('password')
