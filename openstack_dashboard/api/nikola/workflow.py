@@ -49,6 +49,29 @@ class Workflow():
         self.parameters = self.input.split(',')
 
 
+class Execution():
+    
+    def __init__(self, execution_json):
+        '''{
+            "state_info": null,
+            "workflow_name": "nikola_poc_test.customer_setup",
+            "created_at": "2015-02-09 22:14:45",
+            "updated_at": "2015-02-09 22:14:47",
+            "state": "SUCCESS",
+            "output": "{'project_id': 'f42a53114a934a179013d5a06034c622', 'token': 'd20a618008924799b5b19c35850a830a', 'auth_admin_url': 'http://r1-controller:35357/v2.0', 'domain_id': 'eaf9611bc60e4f2ebaea1468b504cdaf', 'user_id': '5fc61f0601ee4cd2a0ca5e4b8ccd2cad'}",
+            "input": "{'domain_name': 'poc_domain_1', 'email': 'poc_user_1@a.com', 'requester_sso_token': '3018138b45d23850ebe49c0c97faa5a60f06a0e8407b7557bc72fca9764ff523', 'root_op_password': 'password', 'enabled': 'True', 'root_op_user_name': 'admin', 'company_uuid': '76c6f530-40c1-446d-a5d5-a66e78605149', 'auth_url': 'http://172.20.1.50:5000/v3/', 'password': 'Sungard05', 'project_name': 'poc_project_1', 'domain_description': 'Domain created for poc', 'first_name': 'poc_first_1', 'project_description': 'Project created for poc', 'last_name': 'poc_last_1', 'root_op_domain_name': 'default'}",
+            "id": "f85fd723-62b2-4e10-a896-c9b00a9edaf8"
+        }'''
+        self.id = execution_json['id']
+        self.workflow_name = execution_json['workflow_name']
+        self.created_at = execution_json['created_at']
+        self.updated_at = execution_json['updated_at']
+        self.state = execution_json['state']
+        self.output = execution_json['output']
+        self.input = execution_json['input']
+        self.state_info = execution_json['state_info']
+
+
 def list_workbooks(request, search_opts=None):
     
     from nikola_api import NikolaAPI
@@ -77,19 +100,52 @@ def list_workflows(request, search_opts=None):
     return (workflows, has_more_data, has_prev_data)
 
 
-def get_workbook(request, workbook_id):
+def get_workbook(request, workflow_id):
 
+    workflow = get_workflow(request, workflow_id)
+    if workflow is None:    return None
     (workbooks, has_more_data, has_prev_data) = list_workbooks(request)
     for workbook in workbooks:
-        if workbook.id == workbook_id:  return workbook
+        if workbook.name == workflow.name.split('.')[0]:  return workbook
     return None
 
 
-def get_workflow(request, workbook):
+def get_workflow(request, workflow_id):
     
     (workflows, has_more_data, has_prev_data) = list_workflows(request)
     for workflow in workflows:
-        if workbook.name == workflow.name.split('.')[0]:    return workflow
+        if workflow.id == workflow_id:    return workflow
     return None
+
+
+def launch_workflow(request, workflow_name, params):
+    
+    #auth_ref = request.session['auth_ref']
+    #workflow = auth_ref.get('workflow')
+    #endpoint = next(ep['url'] for ep in next(s['endpoints'] for s in workflow if s['name'] == 'heat') if ep['interface']=='public')
+    #token = auth_ref['auth_token']  
+    
+    from nikola_api import NikolaAPI
+    nikapi = NikolaAPI()
+    print workflow_name, params
+    data = json.dumps({"workflow_definition":workflow_name, "input_json":params})
+    print data
+    res = nikapi.send(url='/useast1/nikola/r2/workflow/start', data=data)
+    print res
+    return res['result']['result']['id']
+
+
+def list_executions(request, workflow_name):
+
+    from nikola_api import NikolaAPI
+    nikapi = NikolaAPI()
+    res = nikapi.send(url='/useast1/nikola/r2/workflow/list_executions', data=json.dumps({"workflow_definition":workflow_name}))
+    print "####", res
+    executions = []
+    for execution in res['result']['result']:
+        executions.append(Execution(execution))
+
+    return executions
+
 
 

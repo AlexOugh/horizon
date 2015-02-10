@@ -33,7 +33,7 @@ class NikolaAPI():
             res_json = json.loads(content)
             return res_json
         except Exception, ex:
-            print self.get_stack_trace_str()
+            print ex
             raise ex
 
 
@@ -58,7 +58,7 @@ class NikolaAPI():
             res_json = json.loads(content)
             return res_json
         except Exception, ex:
-            print self.get_stack_trace_str()
+            print ex
             raise ex
 
 

@@ -34,6 +34,9 @@ class LaunchWorkflowForm(forms.SelfHandlingForm):
     workflow_id = forms.CharField(label=_("Workflow ID"),
                                 required=False,
                                 widget=forms.HiddenInput())
+    workflow_name = forms.CharField(label=_("Workflow Name"),
+                                required=False,
+                                widget=forms.HiddenInput())
     #name = forms.CharField(max_length=255, label=_("Stack Name"), initial='poc_stackname_')
     no_autocomplete = True
 
@@ -50,6 +53,7 @@ class LaunchWorkflowForm(forms.SelfHandlingForm):
         super(LaunchWorkflowForm, self).__init__(request, *args, **kwargs)
 
         workflow_id = kwargs['initial'].get('workflow_id', None)
+        workflow_name = kwargs['initial'].get('workflow_name', None)
 
         # add the fields from the input parameters of the selected catalog dynamically
         for param in kwargs['initial'].get('workflow_parameters', []):
@@ -77,8 +81,12 @@ class LaunchWorkflowForm(forms.SelfHandlingForm):
     def handle(self, request, data):
         print data
         try:
-            api.nikola.catalog.launch_catalog(self.request, data['catalog_id'], data)
-            messages.success(request, _("Service catalog launch started."))
+            # delete 'workflow_id' and 'workflow_name' from the param
+            workflow_name = data['workflow_name']
+            del data['workflow_id']
+            del data['workflow_name']
+            execution_id = api.nikola.workflow.launch_workflow(self.request, workflow_name, data)
+            messages.success(request, _("Workflow launch started."))
             return True
         except Exception:
             exceptions.handle(request)

@@ -38,12 +38,12 @@ class IndexView(tables.DataTableView):
             marker = self.request.GET.get(nikolaboard_tables.WorkflowTable._meta.pagination_param)
 
         try:
-            workbooks, self._more, self._prev = api.nikola.workflow.list_workbooks(
+            workflows, self._more, self._prev = api.nikola.workflow.list_workflows(
                 self.request,
                 search_opts={'marker': marker, 'paginate': True})
             if prev_marker is not None:
-                workbooks = sorted(workbooks, key=attrgetter('created_at'), reverse=True)
-            return workbooks
+                workflows = sorted(workflows, key=attrgetter('created_at'), reverse=True)
+            return workflows
         except Exception:
             self._prev = False
             self._more = False
@@ -60,12 +60,12 @@ class DetailView(tabs.TabbedTableView):
         workflow_id = kwargs['workflow_id']
         print kwargs['workflow_id']
         try:
-            workbook = api.nikola.workflow.get_workbook(
+            workflow = api.nikola.workflow.get_workflow(
                 request,
                 workflow_id)
-            request.session['workflow_id'] = workbook.id
-            request.session['workflow_name'] = workbook.name
-            return workbook
+            request.session['workflow_id'] = workflow.id
+            request.session['workflow_name'] = workflow.name
+            return workflow
         except Exception:
             msg = _("Unable to retrieve workflow.")
             print msg
@@ -76,9 +76,7 @@ class DetailView(tabs.TabbedTableView):
     def get_template(self, request, **kwargs):
         try:
             workflow_id = kwargs['workflow_id']
-            workflow_template = api.nikola.workflow.get_workbook(
-                request,
-                workflow_id).definition
+            workflow_template = api.nikola.workflow.get_workbook(request, workflow_id).definition
             return workflow_template
         except Exception:
             msg = _("Unable to retrieve workflow template.")
@@ -86,26 +84,11 @@ class DetailView(tabs.TabbedTableView):
             exceptions.handle(request, msg, redirect=self.get_redirect_url())
 
 
-    def get_workflow(self, request, workbook, **kwargs):
-        try:
-            workflow_id = kwargs['workflow_id']
-            workflow = api.nikola.workflow.get_workflow(
-                request,
-                workbook)
-            return workflow
-        except Exception:
-            msg = _("Unable to retrieve workflow.")
-            print msg
-            exceptions.handle(request, msg, redirect=self.get_redirect_url())
-
-
     def get_tabs(self, request, **kwargs):
-        workbook = self.get_data(request, **kwargs)
-        #workflow_template = self.get_template(request, **kwargs)
-        workflow_template = workbook.definition
-        workflow = self.get_workflow(request, workbook, **kwargs)
+        workflow = self.get_data(request, **kwargs)
+        workflow_template = self.get_template(request, **kwargs)
         return self.tab_group_class(
-            request, workbook=workbook, workflow_template=workflow_template, workflow=workflow, **kwargs)
+            request, workflow_template=workflow_template, workflow=workflow, **kwargs)
 
 
     @staticmethod
@@ -120,7 +103,15 @@ class LaunchWorkflowView(forms.ModalFormView):
     form_class = nikolaboard_forms.LaunchWorkflowForm
     submit_label = _("Launch Workflow")
     submit_url = reverse_lazy("horizon:nikolaboard:workflowpanel:launch")
-    success_url = reverse_lazy('horizon:nikolaboard:workflowpanel:detail')
+    #success_url = reverse_lazy('horizon:nikolaboard:workflowpanel:detail')
+
+    def get_success_url(self):
+        print "get success url : %s" % self.kwargs['workflow_id']
+        #url = reverse(self.success_url, args=(self.kwargs['workflow_id'],))
+        url = ("/nikolaboard/workflow/%s/" % (self.kwargs['workflow_id']))
+        print 'success url = %s' % url
+        return url
+
 
     def dispatch(self, *args, **kwargs):
         return super(LaunchWorkflowView, self).dispatch(*args, **kwargs)
@@ -147,16 +138,12 @@ class LaunchWorkflowView(forms.ModalFormView):
     def get_object(self):
         workflow_id = self.kwargs['workflow_id']
         try:
-            workbook = api.nikola.workflow.get_workbook(
-                self.request,
-                workflow_id)
             workflow = api.nikola.workflow.get_workflow(
                 self.request,
-                workbook)
+                workflow_id)
         except Exception:
             msg = _("Unable to retrieve workflow.")
             redirect = reverse('horizon:nikolaboard:workflowpanel:index')
             exceptions.handle(self.request, msg, redirect=redirect)
         return workflow
-
 

@@ -22,3 +22,19 @@ class WorkflowTable(tables.DataTable):
         name = "workflow"
         verbose_name = _("Workflow")
         row_actions = (LaunchWorkflowLink,)
+
+
+class ExecutionsTable(tables.DataTable):
+    #id = tables.Column('id', verbose_name=_("Id"))
+    workflow_name = tables.Column('workflow_name', verbose_name=_("Workflow Name"))
+    input = tables.Column("input", verbose_name=_("Input"),)
+    output = tables.Column("output", verbose_name=_("Output"),)
+    state = tables.Column("state", verbose_name=_("State"),)
+    created_at = tables.Column('created_at', verbose_name=_("Created At"))
+    #updated_at = tables.Column('updated_at', verbose_name=_("Updated At"))
+
+    class Meta:
+        name = "executions"
+        verbose_name = _("Workflow Executions")
+
+

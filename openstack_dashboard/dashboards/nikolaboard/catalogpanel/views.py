@@ -105,7 +105,7 @@ class LaunchCatalogView(forms.ModalFormView):
     form_class = nikolaboard_forms.LaunchCatalogForm
     submit_label = _("Launch Service Catalog")
     submit_url = reverse_lazy("horizon:nikolaboard:catalogpanel:launch")
-    success_url = reverse_lazy('horizon:nikolaboard:catalogpanel:detail')
+    success_url = reverse_lazy('horizon:project:stacks:index')
 
     def dispatch(self, *args, **kwargs):
         return super(LaunchCatalogView, self).dispatch(*args, **kwargs)
