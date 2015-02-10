@@ -37,6 +37,7 @@ from openstack_dashboard.api.nikola import catalog
 from openstack_dashboard.api.nikola import usage
 from openstack_dashboard.api.nikola import workflow
 from openstack_dashboard.api.nikola import sregistry
+from openstack_dashboard.api.nikola import iam
 
 
 __all__ = [
@@ -46,4 +47,5 @@ __all__ = [
     "usage",
     "workflow",
     "sregistry",
+    "iam",
 ]

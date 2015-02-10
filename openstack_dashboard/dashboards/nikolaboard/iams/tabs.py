@@ -4,20 +4,20 @@ from horizon import exceptions
 from horizon import tabs
 
 from openstack_dashboard import api
-from openstack_dashboard.dashboards.nikolaboard.sregistries import tables
+from openstack_dashboard.dashboards.nikolaboard.iams import tables
 
 
-class RegistryTab(tabs.Tab):
+class IAMTab(tabs.Tab):
     name = _("Overview")
-    slug = "service_registry_tab"
-    template_name = "nikolaboard/sregistries/_registry_detail.html"
+    slug = "iam_tab"
+    template_name = "nikolaboard/iams/_iam_detail.html"
     preload = False
 
     def allowed(self, request):
         return True
 
     def get_context_data(self, request):
-        return {"registry": self.tab_group.kwargs['registry']}
+        return {"iam_user": self.tab_group.kwargs['iam_user']}
 
 
 '''class CatalogTemplateTab(tabs.Tab):
@@ -32,8 +32,8 @@ class RegistryTab(tabs.Tab):
         return {"catalog_template": self.tab_group.kwargs['catalog_template']}'''
 
 
-class RegistryTabs(tabs.TabGroup):
-    slug = "Registrypanel_tabs"
-    tabs = (RegistryTab,)
-    #tabs = (RegistryTab, RegistryTemplateTab)
+class IAMTabs(tabs.TabGroup):
+    slug = "IAM_tabs"
+    tabs = (IAMTab,)
+    #tabs = (IAMTab, RegistryTemplateTab)
     sticky = True

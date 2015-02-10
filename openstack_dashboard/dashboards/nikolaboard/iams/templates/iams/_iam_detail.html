@@ -1,0 +1,50 @@
+{% load i18n sizeformat %}
+
+<h3>{% trans "Overview" %}</h3>
+
+<div class="info row detail">
+  <h4>{% trans "Information" %}</h4>
+  <hr class="header_rule">
+  <dl class="dl-horizontal">
+    <dt>{% trans "Name" %}</dt>
+    <dd>{{ iam_user.name }}</dd>
+    <dt>{% trans "ID" %}</dt>
+    <dd>{{ iam_user.id }}</dd>
+    <dt>{% trans "Availability" %}</dt>
+    <dd>{{ iam_user.availability }}</dd>
+    <dt>{% trans "Description" %}</dt>
+    <dd>{{ iam_user.description }}</dd>
+  </dl>
+</div>
+
+<!--<div class="status row detail">
+  <h4>{% trans "Status" %}</h4>
+  <hr class="header_rule">
+  <dl class="dl-horizontal">
+    <dt>{% trans "Created" %}</dt>
+    <dd>{{ workflow.created_at|parse_isotime|timesince_or_never }}</dd>
+    <dt>{% trans "Last Updated" %}</dt>
+    <dd>{{ workflow.updated_at|parse_isotime|timesince_or_never }}</dd>
+  </dl>
+</div>-->
+
+<div class="parameters row detail">
+  <h4>{% trans "IAM Parameters" %}</h4>
+  <hr class="header_rule">
+  <dl class="dl-horizontal">
+    {% for value in iam_user.parameters %}
+    <dd>{{ value }}</dd>
+    {% endfor %}
+  </dl>
+</div>
+
+<!--<div class="launch row detail">
+  <h4>{% trans "Launch Parameters" %}</h4>
+  <hr class="header_rule">
+  <dl class="dl-horizontal">
+    <dt>{% trans "Timeout" %}</dt>
+    <dd>{{ stack.timeout_mins }} {% trans "Minutes" %}</dd>
+    <dt>{% trans "Rollback" %}</dt>
+    <dd>{% if stack.disable_rollback %}{% trans "Disabled" %}{% else %}{% trans "Enabled" %}{% endif %}</dd>
+  </dl>
+</div>-->
