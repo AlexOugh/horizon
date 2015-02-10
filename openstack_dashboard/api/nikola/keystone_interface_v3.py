@@ -146,3 +146,12 @@ def add_user_role(user_name, tenant_name, role_name, auth_admin_url, admin_token
     keystone.roles.add_user_role(my_user, role, my_tenant)
 
 
+def nikola_authenticate(auth_url, user_name, password, domain_name):
+
+    from nikola_api import NikolaAPI
+    nikapi = NikolaAPI()
+    data = {'auth_url':auth_url, 'user_name':user_name, 'password':password, 'domain_name':domain_name}
+    res = nikapi.send(url='/useast1/nikola/r2/openstack/authenticate_raw', data=json.dumps(data))
+    print "####", res
+    return res['result']['result']
+
