@@ -3,40 +3,53 @@
 <h3>{% trans "Overview" %}</h3>
 
 <div class="info row detail">
-  <h4>{% trans "Information" %}</h4>
+  <h4>{% trans "SSO Information" %}</h4>
+  <hr class="header_rule">
+  <dl class="dl-horizontal">
+    <dt>{% trans "Guid" %}</dt>
+    <dd>{{ iam_user.sso.guid }}</dd>
+    <dt>{% trans "First Name" %}</dt>
+    <dd>{{ iam_user.sso.first_name }}</dd>
+    <dt>{% trans "Last Name" %}</dt>
+    <dd>{{ iam_user.sso.last_name }}</dd>
+    <dt>{% trans "Locked" %}</dt>
+    <dd>{{ iam_user.sso.locked }}</dd>
+    <dt>{% trans "Phone" %}</dt>
+    <dd>{{ iam_user.sso.phone }}</dd>
+    <dt>{% trans "Locale" %}</dt>
+    <dd>{{ iam_user.sso.locale }}</dd>
+    <dt>{% trans "Company Name" %}</dt>
+    <dd>{{ iam_user.sso.company_name }}</dd>
+    <dt>{% trans "Company Guid" %}</dt>
+    <dd>{{ iam_user.sso.company_guid }}</dd>
+    <dt>{% trans "Disabled" %}</dt>
+    <dd>{{ iam_user.sso.disabled }}</dd>
+    <dt>{% trans "Timezone" %}</dt>
+    <dd>{{ iam_user.sso.timezone }}</dd>
+    <dt>{% trans "Nickname" %}</dt>
+    <dd>{{ iam_user.sso.nickname }}</dd>
+    <dt>{% trans "Email" %}</dt>
+    <dd>{{ iam_user.sso.email }}</dd>
+  </dl>
+</div>
+
+<div class="info row detail">
+  <h4>{% trans "OpenStack Information" %}</h4>
   <hr class="header_rule">
   <dl class="dl-horizontal">
     <dt>{% trans "Name" %}</dt>
-    <dd>{{ iam_user.name }}</dd>
+    <dd>{{ iam_user.openstack.name }}</dd>
     <dt>{% trans "ID" %}</dt>
-    <dd>{{ iam_user.id }}</dd>
-    <dt>{% trans "Availability" %}</dt>
-    <dd>{{ iam_user.availability }}</dd>
-    <dt>{% trans "Description" %}</dt>
-    <dd>{{ iam_user.description }}</dd>
+    <dd>{{ iam_user.openstack.id }}</dd>
+    <dt>{% trans "Domain" %}</dt>
+    <dd>{{ iam_user.openstack.domain_id }}</dd>
+    <dt>{% trans "Enabled" %}</dt>
+    <dd>{{ iam_user.openstack.enabled }}</dd>
+    <dt>{% trans "Email" %}</dt>
+    <dd>{{ iam_user.openstack.email }}</dd>
   </dl>
 </div>
 
-<!--<div class="status row detail">
-  <h4>{% trans "Status" %}</h4>
-  <hr class="header_rule">
-  <dl class="dl-horizontal">
-    <dt>{% trans "Created" %}</dt>
-    <dd>{{ workflow.created_at|parse_isotime|timesince_or_never }}</dd>
-    <dt>{% trans "Last Updated" %}</dt>
-    <dd>{{ workflow.updated_at|parse_isotime|timesince_or_never }}</dd>
-  </dl>
-</div>-->
-
-<div class="parameters row detail">
-  <h4>{% trans "IAM Parameters" %}</h4>
-  <hr class="header_rule">
-  <dl class="dl-horizontal">
-    {% for value in iam_user.parameters %}
-    <dd>{{ value }}</dd>
-    {% endfor %}
-  </dl>
-</div>
 
 <!--<div class="launch row detail">
   <h4>{% trans "Launch Parameters" %}</h4>

@@ -13,9 +13,13 @@ from horizon import tables
 
 
 class IAMTable(tables.DataTable):
-    name = tables.Column("name", verbose_name=_("Name"), link="horizon:nikolaboard:iams:detail")
-    #status = tables.Column("description", verbose_name=_("Description"))
-    #zone = tables.Column('availability', verbose_name=_("Availability"))
+    sso_uuid = tables.Column('sso_uuid', verbose_name=_("SSO Guid"), link="horizon:nikolaboard:iams:detail")
+    op_username = tables.Column('op_username', verbose_name=_("OpenStack User Name"))
+    op_user_id = tables.Column('op_user_id', verbose_name=_("OpenStack Id"))
+    op_tenant_name = tables.Column('op_tenant_name', verbose_name=_("OpenStack Domain Name"))
+    op_keystone_server = tables.Column('op_keystone_server', verbose_name=_("Keystone Server"))
+    op_keystone_region = tables.Column('op_keystone_region', verbose_name=_("OpenStack Region"))
+
 
     class Meta:
         name = "iam"

@@ -61,7 +61,7 @@ class DetailView(tabs.TabbedTableView):
                 request,
                 iam_user_id)
             request.session['iam_user_id'] = iam_user.id
-            request.session['iam_user_name'] = iam_user.name
+            #request.session['iam_user_name'] = iam_user.op_username
             return iam_user
         except Exception:
             msg = _("Unable to retrieve iam user.")
