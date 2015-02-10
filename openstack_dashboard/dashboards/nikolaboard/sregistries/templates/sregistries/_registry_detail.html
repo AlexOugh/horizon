@@ -8,43 +8,27 @@
   <dl class="dl-horizontal">
     <dt>{% trans "Name" %}</dt>
     <dd>{{ registry.name }}</dd>
-    <dt>{% trans "ID" %}</dt>
-    <dd>{{ registry.id }}</dd>
-    <dt>{% trans "Availability" %}</dt>
-    <dd>{{ registry.availability }}</dd>
+    <!--<dt>{% trans "ID" %}</dt>
+    <dd>{{ registry.id }}</dd>-->
+    <dt>{% trans "Version" %}</dt>
+    <dd>{{ registry.version }}</dd>
     <dt>{% trans "Description" %}</dt>
     <dd>{{ registry.description }}</dd>
+    <dt>{% trans "Category" %}</dt>
+    <dd>{{ registry.category }}</dd>
   </dl>
 </div>
 
-<!--<div class="status row detail">
-  <h4>{% trans "Status" %}</h4>
+<div class="methods row detail">
+  <h4>{% trans "Service Methods" %}</h4>
   <hr class="header_rule">
   <dl class="dl-horizontal">
-    <dt>{% trans "Created" %}</dt>
-    <dd>{{ workflow.created_at|parse_isotime|timesince_or_never }}</dd>
-    <dt>{% trans "Last Updated" %}</dt>
-    <dd>{{ workflow.updated_at|parse_isotime|timesince_or_never }}</dd>
-  </dl>
-</div>-->
-
-<div class="parameters row detail">
-  <h4>{% trans "Registry Parameters" %}</h4>
-  <hr class="header_rule">
-  <dl class="dl-horizontal">
-    {% for value in registry.parameters %}
-    <dd>{{ value }}</dd>
+    {% for method in registry.methods %}
+    <dt>{{ method.name }}</dt>
+    <dd>{{ method.description }}</dd>
+    {% for param in method.params %}
+    <dd>- {{ param.name }} ({{param.type}})</dd>
+    {% endfor %}
     {% endfor %}
   </dl>
 </div>
-
-<!--<div class="launch row detail">
-  <h4>{% trans "Launch Parameters" %}</h4>
-  <hr class="header_rule">
-  <dl class="dl-horizontal">
-    <dt>{% trans "Timeout" %}</dt>
-    <dd>{{ stack.timeout_mins }} {% trans "Minutes" %}</dd>
-    <dt>{% trans "Rollback" %}</dt>
-    <dd>{% if stack.disable_rollback %}{% trans "Disabled" %}{% else %}{% trans "Enabled" %}{% endif %}</dd>
-  </dl>
-</div>-->

@@ -14,8 +14,11 @@ from horizon import tables
 
 class RegistryTable(tables.DataTable):
     name = tables.Column("name", verbose_name=_("Name"), link="horizon:nikolaboard:sregistries:detail")
-    #status = tables.Column("description", verbose_name=_("Description"))
-    #zone = tables.Column('availability', verbose_name=_("Availability"))
+    #kind = tables.Column("kind", verbose_name=_("Kind"))
+    version = tables.Column("version", verbose_name=_("Version"))
+    description = tables.Column("description", verbose_name=_("Description"))
+    #documentation = tables.Column("documentation", verbose_name=_("Documentation"))
+    category = tables.Column("category", verbose_name=_("Category"))
 
     class Meta:
         name = "registry"

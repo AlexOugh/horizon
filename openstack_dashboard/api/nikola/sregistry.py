@@ -24,44 +24,69 @@ from heat import *
 
 #LOG = logging.getLogger(__name__)
 
+class MethodParam():
+
+    def __init__(self, param_json):
+        self.id = param_json['name']
+        self.name = param_json['name']
+        self.kind = param_json['kind']
+        self.description = param_json['description']
+        self.required = param_json['required']
+        self.type = param_json['type']
+
+
+class ServiceMethod():
+
+    def __init__(self, method_json):
+        self.id = method_json['name']
+        self.name = method_json['name']
+        self.kind = method_json['kind']
+        self.description = method_json['description']
+        self.documentation = method_json['documentation']
+        self.params = []
+        for param in method_json['params']:
+            self.params.append(MethodParam(param))
+
+
 class ServiceRegistry():
     
     def __init__(self, registry_json):
-        self.id = registry_json['id']
+        self.id = registry_json['name']
         self.name = registry_json['name']
-        '''self.description = catalog_json['description']
-        self.availability = catalog_json['availability']
-        self.content = catalog_json['content']
-        self.parameters = []
-        for key in catalog_json['input_params'].keys():
-            self.parameters.append(key)'''
+        self.kind = registry_json['kind']
+        self.version = registry_json['version']
+        self.description = registry_json['description']
+        self.documentation = registry_json['documentation']
+        self.category = registry_json['category']
+        self.methods = []
+        for method in registry_json['methods']:
+            self.methods.append(ServiceMethod(method))
 
 
 def list_registries(request, search_opts=None):
 
-    '''from nikola_api import NikolaAPI
+    from nikola_api import NikolaAPI
     nikapi = NikolaAPI()
-    res = nikapi.send(url='/useast1/nikola/r2/openstack/list_catalogs', data='{"all":null}')
-    catalogs = []
-    for catalog in res['result']['result']:
-        catalogs.append(ServiceCatalog(catalog))'''
-    
+    args = {}
+    res = nikapi.send(url='/useast1/nikola/r2/RegistryService/search', data=json.dumps(args))
+    print res['result']['result']
     registries = []
-    registries.append(ServiceRegistry({'id':'id1', 'name':'name1'}))
-    registries.append(ServiceRegistry({'id':'id2', 'name':'name2'}))
+    for sregistry in res['result']['result']:
+        registries.append(ServiceRegistry(json.loads(sregistry)['services'][0]))
 
     has_prev_data = False
     has_more_data = False
     return (registries, has_more_data, has_prev_data)
 
 
-def get_registry(request, registry_id):
+def get_registry(request, service_name):
 
-    '''from nikola_api import NikolaAPI
+    from nikola_api import NikolaAPI
     nikapi = NikolaAPI()
-    res = nikapi.send(url='/useast1/nikola/r2/openstack/get_registry', data='{"id":"%s"}' % (registry_id))
-    return ServiceRegistry(res['result']['result'])'''
-    return ServiceRegistry({'id':registry_id, 'name':'name of %s' % registry_id})
+    args = args={'service_name':service_name}
+    res = nikapi.send(url='/useast1/nikola/r2/RegistryService/search', data=json.dumps(args))
+    sregistry = res['result']['result'][0]
+    return ServiceRegistry(json.loads(sregistry)['services'][0])
 
 
 """def launch_catalog(request, catalog_id, params):
